@@ -1,32 +1,31 @@
 "use client";
-import MenuPrincipal from "./MenuPrincipal";
-import Footer from "./Footer";
-import { usePathname } from "next/navigation";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import React, { useEffect, useState } from "react";
+import Login from "./Login";
+import Header from "./Header";
 
-const Main = ({ children, marcas }) => {
-  const pathname = usePathname();
+const Main = ({ children }) => {
+  const [User, setUser] = useState(null);
+
+  useEffect(() => {
+    if (localStorage?.Tercero && localStorage?.Vendedor) {
+      setUser({
+        Tercero: JSON.parse(localStorage.Tercero),
+        Vendedor: JSON.parse(localStorage.Vendedor),
+      });
+    }
+  }, []);
 
   return (
-    <>
-      {pathname.includes("/Admin") ? (
-        <DndProvider backend={HTML5Backend}>{children}</DndProvider>
-      ) : (
-        <main>
-          {pathname.includes("/Marcas") ? (
-            <></>
-          ) : (
-            <>
-              <MenuPrincipal />
-            </>
-          )}
+    <div>
+      {!User && <Login setUser={setUser} />}
 
+      {User && (
+        <section className="container mx-auto space-y-8">
+          <Header setUser={setUser} User={User} />
           {children}
-          <Footer />
-        </main>
+        </section>
       )}
-    </>
+    </div>
   );
 };
 
