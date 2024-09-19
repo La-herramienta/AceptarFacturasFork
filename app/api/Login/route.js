@@ -26,8 +26,6 @@ export async function GET(req) {
     }
     const InfoTercero = Tercero.recordset[0];
 
-    //Validar si tercero tiene información
-
     const Vendedor = await pool
       .request()
       .input("idctercero", InfoTercero?.idctercero).query(`
